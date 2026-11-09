@@ -36,5 +36,5 @@ export const WEATHER_BY_ID: Record<WeatherId, Weather> = Object.fromEntries(
 ) as Record<WeatherId, Weather>;
 
 export function isWeatherId(value: string): value is WeatherId {
-  return value in WEATHER_BY_ID;
+  return Object.prototype.hasOwnProperty.call(WEATHER_BY_ID, value);
 }

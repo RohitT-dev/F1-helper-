@@ -4,7 +4,7 @@ import type { SetupRecord } from '../domain/records';
 import { GenerateError, generateSetup } from '../services/claude';
 import { apiKeyStore, recordStore } from '../services/storage';
 
-export type Phase = 'loading' | 'generating' | 'ready' | 'error' | 'no-key' | 'invalid';
+export type Phase = 'loading' | 'generating' | 'ready' | 'error' | 'no-key' | 'invalid' | 'confirm';
 
 export interface SetupState {
   phase: Phase;
@@ -61,6 +61,12 @@ export function useSetup(id: string) {
         return;
       }
 
+      // A first-time generation spends credits, so a link or tap never starts it on its own.
+      if (!force) {
+        setState({ ...INITIAL, phase: 'confirm' });
+        return;
+      }
+
       setState({
         phase: 'generating',
         record: cached,
@@ -109,7 +115,10 @@ export function useSetup(id: string) {
   }, [run]);
 
   const regenerate = useCallback(() => run(true), [run]);
-  const retry = useCallback(() => run(false), [run]);
+  const retry = useCallback(() => run(true), [run]);
 
-  return { state, regenerate, retry };
+  /** Starts the first generation after the player confirms. */
+  const generate = regenerate;
+
+  return { state, regenerate, retry, generate };
 }

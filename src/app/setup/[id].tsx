@@ -31,7 +31,7 @@ function goBack() {
 
 export default function SetupScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { state, regenerate, retry } = useSetup(id);
+  const { state, regenerate, retry, generate } = useSetup(id);
   const elapsed = useElapsed(state.startedAt);
 
   const combo = parseSetupId(id);
@@ -129,6 +129,16 @@ export default function SetupScreen() {
         <View style={styles.center}>
           <ActivityIndicator color={accent} />
         </View>
+      ) : null}
+
+      {state.phase === 'confirm' ? (
+        <Panel style={styles.banner}>
+          <Txt variant="heading">Build this setup?</Txt>
+          <Txt color={colors.muted} style={styles.bannerText}>
+            It is not saved on this phone yet. Claude builds it using your credits.
+          </Txt>
+          <Button title="Generate setup" color={accent} onColor={team?.onColor} onPress={generate} />
+        </Panel>
       ) : null}
 
       {state.phase === 'no-key' ? (

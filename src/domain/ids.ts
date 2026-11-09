@@ -1,3 +1,4 @@
+import { hasOwn } from '../data/hasOwn';
 import { TEAM_BY_ID } from '../data/teams';
 import { TRACK_BY_ID } from '../data/tracks';
 import { isWeatherId, type WeatherId } from '../data/weather';
@@ -20,7 +21,7 @@ export function parseSetupId(id: string): Combo | null {
   const parts = id.split(SEPARATOR);
   if (parts.length !== 3) return null;
   const [teamId, trackId, weather] = parts;
-  if (!(teamId in TEAM_BY_ID) || !(trackId in TRACK_BY_ID) || !isWeatherId(weather)) {
+  if (!hasOwn(TEAM_BY_ID, teamId) || !hasOwn(TRACK_BY_ID, trackId) || !isWeatherId(weather)) {
     return null;
   }
   return { teamId, trackId, weather };

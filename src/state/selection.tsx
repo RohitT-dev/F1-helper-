@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { hasOwn } from '../data/hasOwn';
 import { TEAM_BY_ID, type Team } from '../data/teams';
 import { TRACK_BY_ID } from '../data/tracks';
 import { isWeatherId, type WeatherId } from '../data/weather';
@@ -37,8 +38,8 @@ function restore(raw: string | null): Selection {
   try {
     const value = JSON.parse(raw) as Partial<Selection>;
     return {
-      teamId: value.teamId && value.teamId in TEAM_BY_ID ? value.teamId : DEFAULT.teamId,
-      trackId: value.trackId && value.trackId in TRACK_BY_ID ? value.trackId : null,
+      teamId: value.teamId && hasOwn(TEAM_BY_ID, value.teamId) ? value.teamId : DEFAULT.teamId,
+      trackId: value.trackId && hasOwn(TRACK_BY_ID, value.trackId) ? value.trackId : null,
       weather: value.weather && isWeatherId(value.weather) ? value.weather : DEFAULT.weather,
     };
   } catch {
