@@ -2,6 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { makeSetupId, parseSetupId } from '../ids';
 
 describe('setup ids', () => {
+  it('rejects inherited object keys', () => {
+    expect(parseSetupId('constructor__las-vegas__dry')).toBeNull();
+    expect(parseSetupId('ferrari__toString__dry')).toBeNull();
+    expect(parseSetupId('ferrari__las-vegas__constructor')).toBeNull();
+  });
+
   it('round-trips a combination', () => {
     const id = makeSetupId({ teamId: 'red-bull', trackId: 'las-vegas', weather: 'light-rain' });
     expect(id).toBe('red-bull__las-vegas__light-rain');
